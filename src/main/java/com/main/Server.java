@@ -11,6 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Server {
 
@@ -28,26 +29,41 @@ public class Server {
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
-                process(serverSocket);
+                processRequest(serverSocket);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void process(ServerSocket serverSocket) throws IOException {
+    private void processRequest(ServerSocket serverSocket) throws IOException {
         try (Socket socket = serverSocket.accept();
              BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))
         ) {
-            List<String> content = readClient(reader);
-            List<String> resources = getRequestedResources(content.get(0));
+            List<String> content = readRequest(reader);
+            if (!content.isEmpty()) {
+                String resource = getRequestedResource(content.get(0));
+                sendResource(resource, writer);
+            }
+        }
+    }
 
-            File resource = new File(getResource(resources.get(0)));
-            try (BufferedReader br = new BufferedReader(new FileReader(resource))) {
+    private void sendResource(String resource, BufferedWriter writer) throws IOException {
+        File file = new File(webAppPath + resource);
+        if (!file.exists()) {
+            writer.write("Not able to find resource [" + resource + "]. Please use one of the following: \n");
+
+            List<String> availablePaths = FileAnalyzer.getFilesInDir(webAppPath);
+            for (String path : availablePaths) {
+                writer.write(path);
+                writer.newLine();
+            }
+        } else {
+            try (BufferedReader fileReader = new BufferedReader(new FileReader(file))) {
                 String line;
                 writer.write("HTTP/1.1 200 OK\n\n");
-                while ((line = br.readLine()) != null) {
+                while ((line = fileReader.readLine()) != null) {
                     writer.write(line);
                     writer.newLine();
                 }
@@ -55,21 +71,15 @@ public class Server {
         }
     }
 
-    private String getResource(String resource) {
-        return webAppPath.concat("/").concat(resource);
+    private String getRequestedResource(String line) {
+        return line.substring(line.indexOf("/"), line.indexOf(" HTTP"));
     }
 
-    private List<String> getRequestedResources(String line) {
-        String resources = line.substring(line.indexOf("/") + 1, line.indexOf(" HTTP"));
-        return List.of(resources.split(" "));
-    }
-
-    private List<String> readClient(BufferedReader reader) throws IOException {
+    private List<String> readRequest(BufferedReader reader) throws IOException {
         List<String> clientContent = new ArrayList<>();
         while (true) {
             String message = reader.readLine();
-            System.out.println(message); //TODO remove
-            if (message.isBlank()) {
+            if (Objects.isNull(message) || message.isBlank()) {
                 break;
             }
             clientContent.add(message);
