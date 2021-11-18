@@ -43,7 +43,8 @@ public class Server {
         ) {
             List<String> content = readRequest(reader);
             if (!content.isEmpty()) {
-                String resource = getRequestedResource(content.get(0));
+                String resourceLine = content.get(0);
+                String resource = resourceLine.substring(resourceLine.indexOf("/"), resourceLine.indexOf(" HTTP"));
                 sendResource(resource, writer);
             }
         }
@@ -69,10 +70,6 @@ public class Server {
                 }
             }
         }
-    }
-
-    private String getRequestedResource(String line) {
-        return line.substring(line.indexOf("/"), line.indexOf(" HTTP"));
     }
 
     private List<String> readRequest(BufferedReader reader) throws IOException {
