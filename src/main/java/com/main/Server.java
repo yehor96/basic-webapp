@@ -32,7 +32,7 @@ public class Server {
                 processRequest(serverSocket);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
     }
 
@@ -73,15 +73,15 @@ public class Server {
     }
 
     private List<String> readRequest(BufferedReader reader) throws IOException {
-        List<String> clientContent = new ArrayList<>();
+        List<String> requestContent = new ArrayList<>();
         while (true) {
             String message = reader.readLine();
             if (Objects.isNull(message) || message.isBlank()) {
                 break;
             }
-            clientContent.add(message);
+            requestContent.add(message);
         }
-        return clientContent;
+        return requestContent;
     }
 
 }
