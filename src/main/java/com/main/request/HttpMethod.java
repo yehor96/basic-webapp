@@ -1,4 +1,4 @@
-package com.main;
+package com.main.request;
 
 public enum HttpMethod {
     GET,

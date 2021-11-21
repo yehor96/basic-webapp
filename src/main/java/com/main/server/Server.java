@@ -1,4 +1,7 @@
-package com.main;
+package com.main.server;
+
+import com.main.helper.FileAnalyzer;
+import com.main.RequestHandler;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -29,7 +32,13 @@ public class Server {
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
-                processRequest(serverSocket);
+                try (Socket socket = serverSocket.accept();
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))
+                ) {
+                    RequestHandler requestHandler = new RequestHandler(writer, reader, webAppPath);
+                    requestHandler.handle();
+                }
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -76,6 +85,7 @@ public class Server {
         List<String> requestContent = new ArrayList<>();
         while (true) {
             String message = reader.readLine();
+            System.out.println(message);
             if (Objects.isNull(message) || message.isBlank()) {
                 break;
             }
