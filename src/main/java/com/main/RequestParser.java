@@ -22,7 +22,7 @@ public class RequestParser {
         return request;
     }
 
-    private static void injectUriAndMethod(String line, Request request) throws BadRequestException {
+    static void injectUriAndMethod(String line, Request request) throws BadRequestException {
         if (Objects.isNull(line)) {
             throw new BadRequestException();
         }

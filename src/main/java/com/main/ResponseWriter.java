@@ -12,7 +12,7 @@ public class ResponseWriter {
         writeContent(content, writer);
     }
 
-    public static void writeNotFound( BufferedWriter writer) throws IOException {
+    public static void writeNotFound(BufferedWriter writer) throws IOException {
         writer.write("HTTP/1.1 404 Not Found\n\n");
         writeContent(NOT_FOUND_ERROR_MESSAGE, writer);
     }
