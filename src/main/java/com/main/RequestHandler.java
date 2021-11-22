@@ -1,6 +1,7 @@
 package com.main;
 
 import com.main.exceptions.BadRequestException;
+import com.main.exceptions.MethodNotAllowedException;
 import com.main.exceptions.ResourceNotFoundException;
 import com.main.helper.FileAnalyzer;
 import com.main.request.Request;
@@ -27,6 +28,7 @@ public class RequestHandler {
             Request request = RequestParser.parse(reader);
             String content;
             String uri = request.getUri();
+
             if (uri.equals("/")) {
                 content = getHomePageContent();
             } else {
@@ -39,6 +41,8 @@ public class RequestHandler {
             ResponseWriter.writeBadRequest(writer);
         } catch (ResourceNotFoundException e) {
             ResponseWriter.writeNotFound(writer);
+        } catch (MethodNotAllowedException e) {
+            ResponseWriter.writeMethodNotAllowed(writer, e);
         }
     }
 

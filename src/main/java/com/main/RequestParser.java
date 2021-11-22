@@ -1,6 +1,7 @@
 package com.main;
 
 import com.main.exceptions.BadRequestException;
+import com.main.exceptions.MethodNotAllowedException;
 import com.main.request.HttpMethod;
 import com.main.request.Request;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
 
 public class RequestParser {
 
-    public static Request parse(BufferedReader reader) throws IOException, BadRequestException {
+    public static Request parse(BufferedReader reader) throws IOException {
         Request request = new Request();
 
         String firstLine = reader.readLine();
@@ -22,7 +23,7 @@ public class RequestParser {
         return request;
     }
 
-    static void injectUriAndMethod(String line, Request request) throws BadRequestException {
+    static void injectUriAndMethod(String line, Request request) {
         if (Objects.isNull(line)) {
             throw new BadRequestException();
         }
@@ -32,6 +33,9 @@ public class RequestParser {
 
         String httpMethodValue = line.substring(0, line.indexOf(" "));
         HttpMethod httpMethod = HttpMethod.valueOf(httpMethodValue);
+        if (httpMethod == HttpMethod.POST) {
+            throw new MethodNotAllowedException("Method " + httpMethod + " is not allowed");
+        }
         request.setMethod(httpMethod);
     }
 

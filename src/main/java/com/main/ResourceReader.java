@@ -16,7 +16,7 @@ public class ResourceReader {
         this.webAppPath = webAppPath;
     }
 
-    public String read(String uri) throws IOException, ResourceNotFoundException {
+    public String read(String uri) throws IOException {
         File file = new File(webAppPath + uri);
         StringBuilder content = new StringBuilder();
 

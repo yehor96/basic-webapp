@@ -1,6 +1,7 @@
 package com.main;
 
 import com.main.exceptions.BadRequestException;
+import com.main.exceptions.MethodNotAllowedException;
 import com.main.request.HttpMethod;
 import com.main.request.Request;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class RequestParserTest {
 
     @Test
-    void testInjectUriAndMethodSetsGetMethodToRequest() throws BadRequestException {
+    void testInjectUriAndMethodSetsGetMethodToRequest() {
         Request request = new Request();
         String testLine = "GET /test HTTP/1.1";
 
@@ -21,17 +22,17 @@ class RequestParserTest {
     }
 
     @Test
-    void testInjectUriAndMethodSetsPostMethodToRequest() throws BadRequestException {
+    void testInjectUriAndMethodThrowsMethodNotAllowedExceptionWhenReceivingPostRequest() {
         Request request = new Request();
         String testLine = "POST /test HTTP/1.1";
 
-        RequestParser.injectUriAndMethod(testLine, request);
-
-        assertEquals(HttpMethod.POST, request.getMethod());
+        Exception exception = assertThrows(MethodNotAllowedException.class, () ->
+                RequestParser.injectUriAndMethod(testLine, request));
+        assertEquals("Method POST is not allowed", exception.getMessage());
     }
 
     @Test
-    void testInjectUriAndMethodSetsUriToRequest() throws BadRequestException {
+    void testInjectUriAndMethodSetsUriToRequest() {
         Request request = new Request();
         String testLine = "GET /test HTTP/1.1";
 
@@ -41,7 +42,7 @@ class RequestParserTest {
     }
 
     @Test
-    void testInjectUriAndMethodSetsUriWithFoldersToRequest() throws BadRequestException {
+    void testInjectUriAndMethodSetsUriWithFoldersToRequest() {
         Request request = new Request();
         String testLine = "GET /folder/anotherfolder/test HTTP/1.1";
 
@@ -51,7 +52,7 @@ class RequestParserTest {
     }
 
     @Test
-    void testInjectUriAndMethodSetsEmptyUriToRequest() throws BadRequestException {
+    void testInjectUriAndMethodSetsEmptyUriToRequest() {
         Request request = new Request();
         String testLine = "GET / HTTP/1.1";
 
