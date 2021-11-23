@@ -3,13 +3,11 @@ package com.main;
 import com.main.exceptions.BadRequestException;
 import com.main.exceptions.MethodNotAllowedException;
 import com.main.exceptions.ResourceNotFoundException;
-import com.main.helper.FileAnalyzer;
 import com.main.request.Request;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.List;
 
 public class RequestHandler {
 
@@ -28,15 +26,16 @@ public class RequestHandler {
             Request request = RequestParser.parse(reader);
             String content;
             String uri = request.getUri();
-
             if (uri.equals("/")) {
-                content = getHomePageContent();
+                HomePageProcessor homePageProcessor = new HomePageProcessor(webAppPath);
+                content = homePageProcessor.getHomePageContent();
             } else {
                 ResourceReader resourceReader = new ResourceReader(webAppPath);
                 content = resourceReader.read(uri);
             }
 
             ResponseWriter.writeOk(content, writer);
+
         } catch (BadRequestException e) {
             ResponseWriter.writeBadRequest(writer);
         } catch (ResourceNotFoundException e) {
@@ -44,16 +43,5 @@ public class RequestHandler {
         } catch (MethodNotAllowedException e) {
             ResponseWriter.writeMethodNotAllowed(writer, e);
         }
-    }
-
-    private String getHomePageContent() {
-        StringBuilder content = new StringBuilder("This is Home Page. Feel free to browse these files: \n\n");
-
-        List<String> availablePaths = FileAnalyzer.getFilesInDir(webAppPath);
-        for (String path : availablePaths) {
-            content.append(path).append("\n");
-        }
-
-        return content.toString();
     }
 }
