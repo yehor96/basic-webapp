@@ -2,10 +2,9 @@ package com.main;
 
 import com.main.exceptions.ResourceNotFoundException;
 
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 
 public class ResourceReader {
@@ -16,19 +15,16 @@ public class ResourceReader {
         this.webAppPath = webAppPath;
     }
 
-    public String read(String uri) throws IOException {
-        File file = new File(webAppPath + uri);
-        StringBuilder content = new StringBuilder();
+    public byte[] read(String uri) throws IOException {
+        File file = new File(webAppPath, uri);
+        byte[] content = new byte[(int) file.length()];
 
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = fileReader.readLine()) != null) {
-                content.append(line).append("\n");
-            }
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            fileInputStream.read(content);
         } catch (FileNotFoundException e) {
             throw new ResourceNotFoundException(e);
         }
 
-        return content.toString();
+        return content;
     }
 }

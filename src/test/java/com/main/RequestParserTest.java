@@ -28,6 +28,7 @@ class RequestParserTest {
 
         Exception exception = assertThrows(MethodNotAllowedException.class, () ->
                 RequestParser.injectUriAndMethod(testLine, request));
+
         assertEquals("Method POST is not allowed", exception.getMessage());
     }
 

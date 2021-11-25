@@ -24,7 +24,7 @@ public class RequestHandler {
     public void handle() throws IOException {
         try {
             Request request = RequestParser.parse(reader);
-            String content;
+            byte[] content;
             String uri = request.getUri();
             if (uri.equals("/")) {
                 HomePageProcessor homePageProcessor = new HomePageProcessor(webAppPath);

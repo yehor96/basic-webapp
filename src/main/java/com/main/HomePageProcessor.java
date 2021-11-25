@@ -12,7 +12,7 @@ public class HomePageProcessor {
         this.webAppPath = webAppPath;
     }
 
-    public String getHomePageContent() {
+    public byte[] getHomePageContent() {
         StringBuilder content = new StringBuilder("This is Home Page. Feel free to browse these files: \n\n");
 
         List<String> availablePaths = FileAnalyzer.getFilesInDir(webAppPath);
@@ -20,6 +20,6 @@ public class HomePageProcessor {
             content.append(path).append("\n");
         }
 
-        return content.toString();
+        return content.toString().getBytes();
     }
 }
