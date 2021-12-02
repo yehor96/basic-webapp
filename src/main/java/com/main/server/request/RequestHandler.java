@@ -1,9 +1,11 @@
-package com.main;
+package com.main.server.request;
 
+import com.main.server.resourceprovider.HomePageProcessor;
+import com.main.server.resourceprovider.ResourceReader;
+import com.main.server.response.ResponseWriter;
 import com.main.exceptions.BadRequestException;
 import com.main.exceptions.MethodNotAllowedException;
 import com.main.exceptions.ResourceNotFoundException;
-import com.main.request.Request;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

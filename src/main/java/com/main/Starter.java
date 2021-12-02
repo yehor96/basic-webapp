@@ -1,4 +1,6 @@
-package com.main.server;
+package com.main;
+
+import com.main.server.Server;
 
 public class Starter {
 

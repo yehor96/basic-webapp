@@ -2,8 +2,9 @@ package com.main;
 
 import com.main.exceptions.BadRequestException;
 import com.main.exceptions.MethodNotAllowedException;
-import com.main.request.HttpMethod;
-import com.main.request.Request;
+import com.main.server.request.HttpMethod;
+import com.main.server.request.Request;
+import com.main.server.request.RequestParser;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

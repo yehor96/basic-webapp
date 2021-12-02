@@ -1,4 +1,4 @@
-package com.main;
+package com.main.server.resourceprovider;
 
 import com.main.helper.FileAnalyzer;
 

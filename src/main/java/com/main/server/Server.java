@@ -1,6 +1,6 @@
 package com.main.server;
 
-import com.main.RequestHandler;
+import com.main.server.request.RequestHandler;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

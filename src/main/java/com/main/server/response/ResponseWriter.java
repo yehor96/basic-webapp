@@ -1,4 +1,4 @@
-package com.main;
+package com.main.server.response;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
