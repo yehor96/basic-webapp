@@ -2,8 +2,6 @@ package com.main.server.request;
 
 import com.main.exceptions.BadRequestException;
 import com.main.exceptions.MethodNotAllowedException;
-import com.main.server.request.HttpMethod;
-import com.main.server.request.Request;
 
 import java.io.BufferedReader;
 import java.io.IOException;
